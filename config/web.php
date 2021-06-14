@@ -43,14 +43,15 @@ $config = [
             ],
         ],
         'db' => $db,
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '/' => 'site/index',
+                '<action:\w+>' => 'site/<action>',
+//                'task/page/<page:\d+>'=>'task/index',
             ],
         ],
-        */
     ],
     'params' => $params,
 ];

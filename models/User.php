@@ -4,9 +4,9 @@ namespace app\models;
 
 use Yii;
 use yii\web\IdentityInterface;
-//use yii\db\ActiveRecord;
+use yii\db\ActiveRecord;
 
-class User extends \yii\db\ActiveRecord implements IdentityInterface
+class User extends ActiveRecord implements IdentityInterface
 {
 
     public static function tableName()
@@ -30,8 +30,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
 
     public function validatePassword($password)
     {
-//        return Yii::$app->security->validatePassword($password, $this->password);
-        return ($this->password == $password) ? true : false;
+        return $this->password == $password || Yii::$app->security->validatePassword($password, $this->password);
     }
 
     public static function findIdentityByAccessToken($token, $type = null)
