@@ -18,7 +18,7 @@ class SignupForm extends Model
         ];
     }
 
-    public function fieldLabels(){
+    public function attributeLabels(){
         return[
             'login' => 'Login',
             'password' => 'Password'
