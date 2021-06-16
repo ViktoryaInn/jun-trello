@@ -14,6 +14,11 @@ class Task extends ActiveRecord
         return 'task_table';
     }
 
+    public static function findOne($id)
+    {
+        return parent::findOne($id);
+    }
+
     public function getTitle(){
         return $this->title;
     }

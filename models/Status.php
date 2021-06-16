@@ -11,4 +11,8 @@ class Status extends ActiveRecord
     {
         return 'status_table';
     }
+
+    public static function findStatus($id){
+        return static::findOne($id);
+    }
 }

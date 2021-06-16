@@ -15,7 +15,7 @@ class TaskForm extends Model
 
     public function rules(){
         return [
-            [['title', 'description', 'author', 'executor', 'deadline'], 'required', 'message' => 'Fill in the field']
+            [['title', 'description', 'executor', 'deadline'], 'required', 'message' => 'Fill in the field']
         ];
     }
 
