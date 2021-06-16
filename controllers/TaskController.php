@@ -3,6 +3,7 @@
 
 namespace app\controllers;
 
+use app\models\Comment;
 use app\models\Status;
 use app\models\TaskSearchModel;
 use app\models\User;
@@ -11,29 +12,11 @@ use app\models\Task;
 use app\models\TaskForm;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
-use yii\data\Pagination;
 
 
 class TaskController extends Controller
 {
     public function actionIndex(){
-//        $tasks = Task::find()->all();
-//        $statuses = Status::find()->all();
-//        $users = User::find()->all();
-//        return $this->render('index', [
-//            'tasks' => $tasks,
-//            'statuses' => $statuses,
-//            'users' => $users
-//        ]);
-
-//        $query = Task::find()->with('status')->with('author')->with('executor');
-//        $pages = new Pagination(['totalCount' => $query->count()]);
-//        $models = $query->offset($pages->offset)
-//            ->limit($pages->limit)
-//            ->all();
-//
-//        return $this->render('index', compact('models', 'pages'));
-
         $searchModel = new TaskSearchModel();
         $query = Task::find();
         $dataProvider = new ActiveDataProvider([
@@ -42,7 +25,7 @@ class TaskController extends Controller
                 'pageSize' => 5,
             ]
         ]);
-        $searchModel->load(\Yii::$app->request->getQueryParams());
+        $searchModel->load(Yii::$app->request->getQueryParams());
 
         $query->joinWith(['status']);
         $dataProvider->sort->attributes['status'] = [
@@ -125,11 +108,12 @@ class TaskController extends Controller
 
     public function actionView($id){
         $task = Task::findOne($id);
+        $comments = Comment::findAll(['task_id' => $id]);
         if ($task === null) {
             Yii::$app->session->setFlash('error', 'Ошибка. Такое задание не найдено');
             return $this->redirect('/task/index');
         }
-        return $this->render('view', ['task' => $task]);
+        return $this->render('view', ['task' => $task, 'comments' => $comments]);
     }
 
     public function actionUpdate($id){

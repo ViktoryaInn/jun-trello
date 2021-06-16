@@ -10,7 +10,6 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Create task';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="site-login">
     <h1><?= Html::encode($this->title) ?></h1>
@@ -28,7 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= $form->field($model, 'title')->textInput(['autofocus' => true]) ?>
 
-    <?= $form->field($model, 'description')->textInput(['autofocus' => true]) ?>
+    <?= $form->field($model, 'description')->textarea(['autofocus' => true]) ?>
 
     <?= $form->field($model, 'executor')->dropdownList(
         User::find()->select(['login', 'id'])->indexBy('id')->column(),
