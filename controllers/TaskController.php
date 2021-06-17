@@ -24,6 +24,7 @@ class TaskController extends Controller
             'query' => $query,
             'pagination' => [
                 'pageSize' => 5,
+                'pageSizeParam' => false
             ]
         ]);
         $searchModel->load(Yii::$app->request->getQueryParams());

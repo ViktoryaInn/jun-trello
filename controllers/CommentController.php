@@ -12,7 +12,7 @@ class CommentController extends Controller
     public function actionCreate($taskId){
         if(Yii::$app->user->isGuest){
             Yii::$app->session->setFlash('info', 'You should login to add commentary');
-            return $this->redirect('/task/view?id=' . $taskId);
+            return $this->redirect('/task/view/' . $taskId);
         }
 
         $model = new CommentForm();
@@ -23,7 +23,7 @@ class CommentController extends Controller
             $comment->text = $model->text;
             $comment->created_at = date('Y-m-d');
             if($comment->save()){
-                return $this->redirect('/task/view?id=' . $taskId);
+                return $this->redirect('/task/view/' . $taskId);
             }
         }
 

@@ -12,7 +12,7 @@ class LaborCostController extends Controller
     public function actionCreate($taskId){
         if(Yii::$app->user->isGuest){
             Yii::$app->session->setFlash('info', 'You should login to add labor cost');
-            return $this->redirect('/task/view?id=' . $taskId);
+            return $this->redirect('/task/view/' . $taskId);
         }
 
         $model = new LaborCostForm();
@@ -23,7 +23,7 @@ class LaborCostController extends Controller
             $laborCost->time = date('H:i', strtotime($model->time));
             $laborCost->comment = $model->comment;
             if($laborCost->save()){
-                return $this->redirect('/task/view?id=' . $taskId);
+                return $this->redirect('/task/view/' . $taskId);
             }
         }
 
