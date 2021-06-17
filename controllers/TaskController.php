@@ -4,6 +4,7 @@
 namespace app\controllers;
 
 use app\models\Comment;
+use app\models\LaborCost;
 use app\models\Status;
 use app\models\TaskSearchModel;
 use app\models\User;
@@ -53,37 +54,10 @@ class TaskController extends Controller
         return $this->render('index', ['dataProvider'=>$dataProvider, 'searchModel' => $searchModel]);
     }
 
-    public function actionTaskFilter(){
-        $filter = Yii::$app->request->get('filter');
-        $name = Yii::$app->request->get('name');
-
-        $tasks = [];
-
-        if($filter == 'status'){
-            $statusId = Status::find()->where(['name' => $name])->one();
-            $tasks = Task::find()->where(['status_id' => $statusId])->all();
-        }else if($filter == 'author'){
-            $userId = User::findByUsername($name)->id;
-            $tasks = Task::find()->where(['author_id' => $userId])->all();
-        }else if($filter == 'executor'){
-            $userId = User::findByUsername($name)->id;
-            $tasks = Task::find()->where(['executor_id' => $userId])->all();
-        }
-
-        $statuses = Status::find()->all();
-        $users = User::find()->all();
-
-        return $this->render('index', [
-            'statuses' => $statuses,
-            'users' => $users,
-            'tasks' => $tasks
-        ]);
-    }
-
     public function actionCreate(){
         if(Yii::$app->user->isGuest){
             Yii::$app->session->setFlash('info', 'You should login to create task');
-            return $this->goHome();
+            return $this->redirect('/task/index');
         }
 
         $model = new TaskForm();
@@ -109,17 +83,18 @@ class TaskController extends Controller
     public function actionView($id){
         $task = Task::findOne($id);
         $comments = Comment::findAll(['task_id' => $id]);
+        $laborCosts = LaborCost::findAll(['task_id' => $id]);
         if ($task === null) {
-            Yii::$app->session->setFlash('error', 'Ошибка. Такое задание не найдено');
+            Yii::$app->session->setFlash('error', 'Error, task not found');
             return $this->redirect('/task/index');
         }
-        return $this->render('view', ['task' => $task, 'comments' => $comments]);
+        return $this->render('view', ['task' => $task, 'comments' => $comments, 'laborCosts' => $laborCosts]);
     }
 
     public function actionUpdate($id){
         if(Yii::$app->user->isGuest){
             Yii::$app->session->setFlash('info', 'You should login to update task');
-            return $this->goHome();
+            return $this->redirect('/task/index');
         }
 
         $task = Task::findOne($id);
@@ -144,6 +119,10 @@ class TaskController extends Controller
     }
 
     public function actionDelete($id) {
+        if(Yii::$app->user->isGuest){
+            Yii::$app->session->setFlash('info', 'You should login to delete task');
+            return $this->redirect('/task/index');
+        }
         $task = Task::findOne($id);
         $task->delete();
         Yii::$app->session->setFlash('info', 'Task successfully deleted!');
