@@ -4,8 +4,10 @@
 namespace app\controllers;
 use app\models\LaborCost;
 use app\models\LaborCostForm;
+use app\models\Task;
 use yii\web\Controller;
 use Yii;
+use yii\web\HttpException;
 
 class LaborCostController extends Controller
 {
@@ -13,6 +15,10 @@ class LaborCostController extends Controller
         if(Yii::$app->user->isGuest){
             Yii::$app->session->setFlash('info', 'You should login to add labor cost');
             return $this->redirect('/task/view/' . $taskId);
+        }
+
+        if(!Task::findOne($taskId)) {
+            throw new HttpException(404, 'Task for add labor cost could not be found');
         }
 
         $model = new LaborCostForm();

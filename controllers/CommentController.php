@@ -4,8 +4,10 @@
 namespace app\controllers;
 use app\models\Comment;
 use app\models\CommentForm;
+use app\models\Task;
 use Yii;
 use yii\web\Controller;
+use yii\web\HttpException;
 
 class CommentController extends Controller
 {
@@ -13,6 +15,10 @@ class CommentController extends Controller
         if(Yii::$app->user->isGuest){
             Yii::$app->session->setFlash('info', 'You should login to add commentary');
             return $this->redirect('/task/view/' . $taskId);
+        }
+
+        if(!Task::findOne($taskId)) {
+            throw new HttpException(404, 'Task for commenting could not be found');
         }
 
         $model = new CommentForm();
